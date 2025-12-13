@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     const ui = {
         views: {
             login: document.getElementById('login-view'),
@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    
+
     const STATE_PREFIX = 'analysis_cache_';
     let currentTabId = null;
     let authToken = null;
 
-    
+
     async function init() {
         try {
-            
+
             const storage = await chrome.storage.local.get('auth_token');
             console.log("TrustAI: Popup Init. Storage:", storage);
 
@@ -48,17 +48,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showLoginView();
             }
 
-            
+
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (tab?.id) {
                 currentTabId = tab.id;
-                
+
                 if (authToken) {
                     await restoreState(currentTabId);
-                    fetchQuota(); 
+                    fetchQuota();
 
-                    
-                    const userEmail = ui.auth.userEmail.textContent; 
+
+                    const userEmail = ui.auth.userEmail.textContent;
                     const emailEl = document.getElementById('user-email-chip');
                     const acEmailEl = document.getElementById('ac-email');
                     if (emailEl) emailEl.textContent = userEmail;
@@ -67,13 +67,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (e) {
             console.error("Initialization failed:", e);
-            showLoginView(); 
+            showLoginView();
         }
     }
 
     init();
 
-    
+
 
     function showLoginView() {
         ui.views.app.classList.add('hidden');
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ui.views.login.classList.add('hidden');
         ui.views.app.classList.remove('hidden');
 
-        
+
         try {
             const payload = JSON.parse(atob(authToken.split('.')[1]));
             ui.auth.userEmail.textContent = payload.email || 'User';
@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     ui.auth.loginBtn.addEventListener('click', () => {
         const extId = chrome.runtime.id;
-        
-        const authUrl = `https:
+
+        const authUrl = `https://cybersec.shivajee.dev/auth/extension-login?ext_id=${extId}`;
         chrome.tabs.create({ url: authUrl });
     });
 
@@ -106,20 +106,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         showLoginView();
     });
 
-    
-    
+
+
     ui.tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            
+
             ui.tabs.forEach(t => t.classList.remove('active'));
             ui.tabContents.forEach(c => c.classList.remove('active'));
 
-            
+
             tab.classList.add('active');
-            const targetId = tab.dataset.tab; 
+            const targetId = tab.dataset.tab;
             document.getElementById(targetId).classList.add('active');
 
-            
+
             if (targetId === 'tab-history') {
                 loadHistory();
             } else if (targetId === 'tab-account') {
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const listContainer = document.getElementById('history-list');
         listContainer.innerHTML = '<p style="text-align:center; color:#9ca3af; margin-top:20px;">Fetching history...</p>';
 
-        
+
         try {
             const cache = await chrome.storage.local.get('scan_history');
             if (cache.scan_history && cache.scan_history.length > 0) {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.warn("Cache read failed", e);
         }
 
-        
+
         try {
             const res = await fetch('https://trust-ai-backend.vercel.app/api/history/', {
                 headers: {
@@ -154,10 +154,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const history = await res.json();
 
-            
+
             chrome.storage.local.set({ scan_history: history });
 
-            
+
             if (history.length === 0) {
                 listContainer.innerHTML = '<p style="text-align:center; color:#9ca3af; margin-top:20px;">No scan history found.</p>';
             } else {
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <span class="h-badge ${item.verdict}">${item.verdict}</span>
             `;
 
-            
+
             el.addEventListener('click', () => {
                 showHistoryDetail(item);
             });
@@ -195,16 +195,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function showHistoryDetail(item) {
-        
+
         document.getElementById('history-list-view').classList.add('hidden');
         const detailView = document.getElementById('history-detail-view');
         detailView.classList.remove('hidden');
 
-        
+
         const details = item.details || {};
         const score = details.trust_score || item.score || 0;
 
-        
+
         const percentage = Math.max(0, Math.min(100, score));
         const circle = document.getElementById('h-score-circle');
         circle.style.strokeDasharray = `${percentage}, 100`;
@@ -214,18 +214,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         circle.style.stroke = color;
         document.getElementById('h-score-text').textContent = percentage;
 
-        
+
         const verdict = item.verdict || "Unverified";
         const badge = document.getElementById('h-verdict-badge');
         badge.textContent = verdict;
         badge.className = `verdict-badge ${verdict.split(' ')[0]}`;
 
-        
+
         document.getElementById('h-timestamp').textContent = new Date(item.timestamp).toLocaleString();
         document.getElementById('h-risk-level').innerHTML = `<strong>${item.risk_level || "Unknown"}</strong>`;
         document.getElementById('h-content-type').textContent = item.url ? "URL" : "Text";
 
-        
+
         const steps = details.reasoning_steps || [];
         const box = document.getElementById('h-reasoning-box');
         if (steps.length > 0) {
@@ -235,13 +235,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    
+
     document.getElementById('history-back-btn').addEventListener('click', () => {
         document.getElementById('history-detail-view').classList.add('hidden');
         document.getElementById('history-list-view').classList.remove('hidden');
     });
 
-    
+
 
     async function fetchQuota() {
         try {
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (res.ok) {
                 const data = await res.json();
 
-                
+
                 const percent = Math.min((data.used / data.limit) * 100, 100);
                 const progressBar = document.getElementById('ac-progress');
                 const usageText = document.getElementById('ac-usage-text');
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (progressBar) progressBar.style.width = `${percent}%`;
                 if (usageText) usageText.textContent = `${data.used} / ${data.limit} Tokens`;
 
-                
+
                 if (progressBar) {
                     if (percent > 90) progressBar.style.backgroundColor = '#ef4444';
                     else if (percent > 70) progressBar.style.backgroundColor = '#f59e0b';
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const savedResult = storage[key];
 
             if (savedResult) {
-                renderResults(savedResult, true); 
+                renderResults(savedResult, true);
             }
         } catch (e) {
             console.warn("TrustAI: State restore failed", e);
@@ -306,17 +306,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderResults(data, isRestoring = false) {
-        
+
         if (!isRestoring) {
-            
+
             document.querySelector('[data-tab="tab-analyze"]').click();
         }
 
-        
+
         ui.views.initial.classList.add('hidden');
         ui.views.results.classList.remove('hidden');
 
-        
+
         const score = data.trust_score || 0;
         updateGauge(score);
 
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ui.results.riskLevel.innerHTML = `<strong>${data.risk_level || "Unknown"}</strong>`;
         ui.results.contentType.textContent = data.content_type || "Analysis Result";
 
-        
+
         const steps = data.reasoning_steps || [];
         if (steps.length > 0) {
             ui.results.reasoningBox.innerHTML = `<ul style="margin:0; padding-left:16px;">${steps.slice(0, 4).map(s => `<li>${s}</li>`).join('')}</ul>`;
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ui.results.reasoningBox.textContent = "No specific reasoning provided.";
         }
 
-        
+
         if (!isRestoring && data.flagged_segments && currentTabId) {
             const validSegments = data.flagged_segments
                 .filter(s => typeof s === 'string' && s.length >= 4)
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateGauge(score) {
         const percentage = Math.max(0, Math.min(100, score));
         ui.results.scoreCircle.style.strokeDasharray = `${percentage}, 100`;
-        let color = '#ef4444'; 
-        if (percentage >= 80) color = '#10b981'; 
-        else if (percentage >= 50) color = '#f59e0b'; 
+        let color = '#ef4444';
+        if (percentage >= 80) color = '#10b981';
+        else if (percentage >= 50) color = '#f59e0b';
         ui.results.scoreCircle.style.stroke = color;
         ui.results.scoreText.textContent = percentage;
     }
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await clearState(currentTabId);
         }
 
-        
+
         ui.views.results.classList.add('hidden');
         ui.views.initial.classList.remove('hidden');
 
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ui.manualAnalyzeBtn.innerHTML = 'Verify Input';
     }
 
-    
+
 
     async function performAnalysis(payload) {
         if (!authToken) {
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        
+
         ui.views.initial.classList.add('hidden');
         ui.views.results.classList.remove('hidden');
 
@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken}` 
+                    'Authorization': `Bearer ${authToken}`
                 },
                 body: JSON.stringify(payload)
             });
@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    
+
 
     ui.resetBtn.addEventListener('click', resetUI);
 
