@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TrustAI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <div id="login-view" class="login-container">
+     <div class="logo-large">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+     </div>
+     <h2>TrustAI Security</h2>
+     <p>Sign in to activate advanced forensic analysis and phishing detection.</p>
+     <button id="login-btn" class="primary-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Sign In / Activate
+     </button>
+  </div>
+
+  
+  <div id="app-view" class="hidden">
+      <div class="header">
+        <div class="brand">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>TrustAI</span>
+        </div>
+        <div class="right-header" style="display:flex; gap:8px; align-items:center;">
+             <div id="account-chip" class="account-chip" title="Account">
+                <span id="user-email-chip">...</span>
+                <button id="logout-btn" title="Sign Out">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </button>
+            </div>
+        </div>
+      </div>
+
+      
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-analyze">Analyze</button>
+        <button class="tab-btn" data-tab="tab-manual">Manual</button>
+        <button class="tab-btn" data-tab="tab-history">History</button>
+        <button class="tab-btn" data-tab="tab-account">Account</button>
+      </div>
+
+      <main id="content">
+        
+        <div id="tab-analyze" class="tab-content active">
+          <div id="initial-view">
+            <div style="text-align: center; padding: 20px 20px;">
+              <p style="color: #6b7280; margin-bottom: 20px;">Scan this page for misinformation and threats.</p>
+              <button id="analyze-btn" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Analyze Page
+              </button>
+            </div>
+          </div>
+
+          
+          <div id="results-view" class="hidden">
+            <div class="card">
+                <div class="section-title">Trust Score</div>
+                <div class="score-container">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg"
+                    d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path id="score-circle" class="circle"
+                    stroke-dasharray="0, 100"
+                    d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <text x="18" y="20.35" class="percentage" id="score-text">--</text>
+                </svg>
+                </div>
+                <span id="verdict-badge" class="verdict-badge">Analyzing...</span>
+            </div>
+
+            <div class="analysis-grid">
+                <div class="status-item">
+                <span class="status-label">RISK LEVEL</span>
+                <span class="status-value" id="risk-level">...</span>
+                </div>
+                <div class="status-item">
+                <span class="status-label">TYPE</span>
+                <span class="status-value" id="content-type">Page</span>
+                </div>
+            </div>
+
+            <div class="section-title">AI Findings</div>
+            <div id="reasoning-box" class="reasoning-box">
+                Running digital forensics analysis...
+            </div>
+            
+            <button id="reset-btn" style="background:none; border:none; color:#6b7280; width:100%; margin-top:15px; cursor:pointer; font-size:12px; text-decoration:underline;">Scan Another Item</button>
+          </div>
+        </div>
+
+        
+        <div id="tab-manual" class="tab-content">
+             <div style="padding: 10px 0;">
+                <label style="font-size:12px; font-weight:600; color:#4b5563; display:block; margin-bottom:10px; text-align:center;">Paste text or URL below to verify</label>
+                <textarea id="manual-input" rows="6" placeholder="Suspicious email text, SMS, or URL..." style="width:100%; border:1px solid #d1d5db; border-radius:6px; padding:12px; font-family:inherit; font-size:13px; box-sizing: border-box; resize: vertical; margin-bottom: 15px;"></textarea>
+                <button id="manual-analyze-btn" class="action-btn" style="width: 100%; justify-content: center;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Verify Input
+                </button>
+             </div>
+        </div>
+
+        
+        <div id="tab-history" class="tab-content">
+            <div id="history-list-view">
+                <div id="history-list" class="history-list">
+                    <p style="text-align:center; color:#9ca3af; margin-top:20px;">Loading history...</p>
+                </div>
+            </div>
+            
+            
+            <div id="history-detail-view" class="hidden">
+                <button id="history-back-btn" style="background:none; border:none; display:flex; align-items:center; gap:5px; color:#6b7280; cursor:pointer; font-size:13px; margin-bottom:10px; padding:0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to List
+                </button>
+                <div id="history-detail-content">
+                    
+                    <div class="card">
+                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                             <span style="font-size:12px; font-weight:600; color:#64748b;">TRUST SCORE</span>
+                             <span id="h-timestamp" style="font-size:11px; color:#94a3b8;">--</span>
+                         </div>
+                         <div style="display:flex; align-items:center; gap:15px;">
+                            <div style="position:relative; width:60px; height:60px;">
+                                <svg viewBox="0 0 36 36" class="circular-chart" style="max-width:100%; max-height:100%;">
+                                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path id="h-score-circle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <text x="18" y="20.35" class="percentage" id="h-score-text" style="font-size:8px;">--</text>
+                                </svg>
+                            </div>
+                            <span id="h-verdict-badge" class="verdict-badge">--</span>
+                         </div>
+                    </div>
+                    
+                    <div class="analysis-grid" style="margin-top:15px;">
+                        <div class="status-item">
+                        <span class="status-label">RISK LEVEL</span>
+                        <span class="status-value" id="h-risk-level">...</span>
+                        </div>
+                        <div class="status-item">
+                        <span class="status-label">URL / TYPE</span>
+                        <span class="status-value" id="h-content-type" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px;">...</span>
+                        </div>
+                    </div>
+
+                    <div class="section-title" style="margin-top:20px;">Findings</div>
+                    <div id="h-reasoning-box" class="reasoning-box"></div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div id="tab-account" class="tab-content">
+          <div class="account-card">
+              <div class="ac-header">
+                  <div class="ac-avatar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div>
+                      <div class="ac-name" id="ac-email">Loading...</div>
+                      <div class="ac-plan">Free Plan</div>
+                  </div>
+              </div>
+              
+              <div class="ac-stats">
+                  <div class="ac-stat-title">Token Usage</div>
+                  <div class="ac-progress-bg">
+                      <div class="ac-progress-bar" id="ac-progress" style="width: 0%"></div>
+                  </div>
+                  <div class="ac-stat-text" id="ac-usage-text">0 / 10000 Tokens</div>
+                  <div class="ac-note">Resets monthly</div>
+              </div>
+          </div>
+        </div>
+
+      </main>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
