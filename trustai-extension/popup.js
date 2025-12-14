@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ui.auth.loginBtn.addEventListener('click', () => {
         const extId = chrome.runtime.id;
 
-        const authUrl = `https://cybersec.shivajee.dev/auth/extension-login?ext_id=${extId}`;
+        const authUrl = `https://trustai.lynkme.site/auth/extension-login?ext_id=${extId}`;
         chrome.tabs.create({ url: authUrl });
     });
 
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         try {
-            const res = await fetch('https://trust-ai-backend.vercel.app/api/history/', {
+            const res = await fetch(`${BASE_URL}/api/history/`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchQuota() {
         try {
-            const res = await fetch('https://trust-ai-backend.vercel.app/api/quota/', {
+            const res = await fetch(`${BASE_URL}/api/quota/`, {
                 headers: { 'Authorization': `Bearer ${authToken}` }
             });
             if (res.ok) {
@@ -377,6 +377,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
+    // CONSTANTS
+    // const BASE_URL = 'http://127.0.0.1:8000'; // Local debugging
+    const BASE_URL = 'https://trust-ai-backend.vercel.app'; // Production
+
     async function performAnalysis(payload) {
         if (!authToken) {
             showLoginView();
@@ -394,7 +398,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ui.results.scoreCircle.style.stroke = '#eee';
 
         try {
-            const API_URL = 'https://trust-ai-backend.vercel.app/api/verify/';
+            const API_URL = `${BASE_URL}/api/verify/`;
             const apiRes = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
