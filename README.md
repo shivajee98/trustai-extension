@@ -6,7 +6,7 @@
 
 ## Overview
 
-TrustAI checks whether the website you are visiting is safe. Unlike standard filters that only check blocklists, this extension analyzes the actual content and visual context of the page in real-time. It can detect if a site is pretending to be a major brand (like Instagram or Microsoft) but is hosted on a different, suspicious domain.
+TrustAI checks whether the website you are visiting is safe. Unlike standard filters that only check blocklists, this extension analyzes the actual content, news claims, and visual context of the page in real-time. It can detect if a site is pretending to be a major brand or if an article contains unverified fake news.
 
 **Current Status**: Beta (Manual Installation required).
 
@@ -14,6 +14,7 @@ TrustAI checks whether the website you are visiting is safe. Unlike standard fil
 
 -   **Deep Content Analysis**: Checks page text and structure for social engineering tactics.
 -   **Visual Verification**: Uses OCR to read text from images/screenshots to find hidden threats.
+-   **Fake News Detector**: Cross-references claims against trusted sources to identify misinformation and fake news articles.
 -   **Trust Score**: Gives a simple 0-100 score based on risk factors.
 -   **Detailed Reports**: Tells you exactly *why* a page is flagged (e.g., "Login form detected on a free hosting subdomain").
 
